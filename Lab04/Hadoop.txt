@@ -1,0 +1,114 @@
+Hadoop Commands
+
+To start with:
+
+hduser@bmsce-Precision-T1700:~$ start-all.sh
+This script is Deprecated. Instead use start-dfs.sh and start-yarn.sh
+Starting namenodes on [localhost]
+hduser@localhost's password: 
+localhost: starting namenode, logging to /usr/local/hadoop/logs/hadoop-hduser-namenode-bmsce-Precision-T1700.out
+hduser@localhost's password: 
+localhost: starting datanode, logging to /usr/local/hadoop/logs/hadoop-hduser-datanode-bmsce-Precision-T1700.out
+Starting secondary namenodes [0.0.0.0]
+hduser@0.0.0.0's password: 
+0.0.0.0: starting secondarynamenode, logging to /usr/local/hadoop/logs/hadoop-hduser-secondarynamenode-bmsce-Precision-T1700.out
+starting yarn daemons
+starting resourcemanager, logging to /usr/local/hadoop/logs/yarn-hduser-resourcemanager-bmsce-Precision-T1700.out
+hduser@localhost's password: 
+localhost: starting nodemanager, logging to /usr/local/hadoop/logs/yarn-hduser-nodemanager-bmsce-Precision-T1700.out
+
+hduser@bmsce-Precision-T1700:~$ jps
+7097 DataNode
+7802 NodeManager
+12540 Jps
+7469 ResourceManager
+6925 NameNode
+7310 SecondaryNameNode
+
+
+Commands:
+
+1:
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -mkdir /hadoop
+
+
+2:
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -ls /
+Found 1 item
+drwxr-xr-x   - hduser supergroup          0 2022-06-06 11:37 /hadoop
+
+
+3:
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -put /home/hduser/Desktop/hadoop.txt /hadoop/hadoop.txt
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -cat /hadoop/hadoop.txt
+Hello, I'm Hadoop
+
+
+4:
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -copyFromLocal /home/hduser/Desktop/hadoop.txt /hadoop/hadoop2.txt
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -cat /hadoop/hadoop.txt
+Hello, I'm Hadoop
+
+
+5:
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -get /hadoop/hadoop1.txt /home/hduser/Desktop/hd.txt
+hduser@bmsce-Precision-T1700:~$ ls Desktop/hd.txt
+Desktop/hd.txt
+
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -getmerge /hadoop/hadoop.txt /hadoop/hadoop2.txt /home/hduser/Desktop/hd_merge.txt
+hduser@bmsce-Precision-T1700:~$ ls Desktop/hd_merge.txt
+Desktop/hd_merge.txt
+
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -getfacl /hadoop
+# file: /hadoop
+# owner: hduser
+# group: supergroup
+user::rwx
+group::r-x
+other::r-x
+
+
+6:
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -copyToLocal /hadoop/hadoop.txt /home/hduser/Desktop/hd2.txt
+
+hduser@bmsce-Precision-T1700:~$ ls Desktop/hd2.txt
+Desktop/hd2.txt
+
+
+7:
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -cat /hadoop/hadoop.txt
+Hello, I'm Hadoop
+
+
+8:
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -mkdir /hadoop/AA
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -mv /hadoop/hadoop.txt /hadoop/AA/hadoop.txt
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -ls /hadoop/AA
+Found 1 items
+-rw-r--r--   1 hduser supergroup         18 2022-06-06 11:41 /hadoop/AA/hadoop.txt
+
+
+9:
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -cp /hadoop/AA/hadoop.txt /hadoop/hadoop2.txt
+hduser@bmsce-Precision-T1700:~$ hdfs dfs -cat /hadoop/hadoop2.txt
+Hello, I'm Hadoop
+
+
+
+To stop Hadoop:
+
+hduser@bmsce-Precision-T1700:~$ stop-all.sh
+This script is Deprecated. Instead use stop-dfs.sh and stop-yarn.sh
+Stopping namenodes on [localhost]
+hduser@localhost's password: 
+localhost: stopping namenode
+hduser@localhost's password: 
+localhost: stopping datanode
+Stopping secondary namenodes [0.0.0.0]
+hduser@0.0.0.0's password: 
+0.0.0.0: stopping secondarynamenode
+stopping yarn daemons
+stopping resourcemanager
+hduser@localhost's password: 
+localhost: stopping nodemanager
+no proxyserver to stop
