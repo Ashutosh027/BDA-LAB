@@ -1,0 +1,116 @@
+cqlsh:system> CREATE KEYSPACE employee with replication = {
+          ... 'class':'SimpleStrategy','replication_factor':1};
+          
+          
+cqlsh:system> USE employee;
+
+
+cqlsh:employee> CREATE TABLE employee_info (
+            ... emp_id text,
+            ... emp_name text,
+            ... designation text,
+            ... date_of_joining date,
+            ... salary float,
+            ... dept_name text,
+            ... PRIMARY KEY(emp_id)
+            ... );
+            
+            
+cqlsh:employee> DESC TABLES
+
+employee_info
+
+cqlsh:employee> BEGIN BATCH
+            ... INSERT INTO employee_info(emp_id,emp_name,designation,date_of_joining,salary,dept_name)
+            ... VALUES ('120','John','Software Engineering','2020-01-01',80000,'Development')
+            ... INSERT INTO employee_info(emp_id,emp_name,designation,date_of_joining,salary,dept_name)
+            ... VALUES ('121','Harry','Debugger','2020-04-11',60000,'Development')
+            ... INSERT INTO employee_info(emp_id,emp_name,designation,date_of_joining,salary,dept_name)
+            ... VALUES ('122','Clark','Tester','2020-02-21',75000,'Testing')
+            ... APPLY BATCH;
+            
+            
+cqlsh:employee> SELECT * FROM employee_info;
+
+ emp_id | date_of_joining | dept_name   | designation          | emp_name | salary
+--------+-----------------+-------------+----------------------+----------+--------
+    120 |      2020-01-01 | Development | Software Engineering |     John |  80000
+    121 |      2020-04-11 | Development |             Debugger |    Harry |  60000
+    122 |      2020-02-21 |     Testing |               Tester |    Clark |  75000
+
+(3 rows)
+
+
+cqlsh:employee> UPDATE employee_info SET emp_name='Potter',dept_name='Testing'
+            ... WHERE emp_id='121';
+            
+            
+cqlsh:employee> ALTER TABLE employee_info ADD Projects set<text>;
+
+
+cqlsh:employee> UPDATE employee_info SET Projects={'SQL','QT'} WHERE emp_id='120';
+
+cqlsh:employee> UPDATE employee_info SET Projects={'UI/UX','PYPY3'} WHERE emp_id='121';
+
+cqlsh:employee> UPDATE employee_info SET Projects={'Voice Module','DATACENTER'} WHERE emp_id='122';
+
+cqlsh:employee> SELECT * FROM employee_info;
+
+ emp_id | date_of_joining | dept_name   | designation          | emp_name | projects                       | salary
+--------+-----------------+-------------+----------------------+----------+--------------------------------+--------
+    120 |      2020-01-01 | Development | Software Engineering |     John |                  {'QT', 'SQL'} |  80000
+    121 |      2020-04-11 |     Testing |             Debugger |   Potter |             {'PYPY3', 'UI/UX'} |  60000
+    122 |      2020-02-21 |     Testing |               Tester |    Clark | {'DATACENTER', 'Voice Module'} |  75000
+
+(3 rows)
+
+
+cqlsh:employee> INSERT INTO employee_info(emp_id,emp_name,designation,date_of_joining,salary,dept_name) VALUES ('123','James','System Design Lead','2020-03-02',90000,'Development') USING TTL 15;
+
+
+cqlsh:employee> SELECT TTL(emp_name) FROM employee_info WHERE emp_id='123' ;
+
+ ttl(emp_name)
+---------------
+             9
+
+(1 rows)
+
+
+cqlsh:employee> SELECT TTL(emp_name) FROM employee_info WHERE emp_id='123' ;
+
+ ttl(emp_name)
+---------------
+             6
+
+(1 rows)
+
+
+cqlsh:employee> SELECT * FROM employee_info ;
+
+ emp_id | date_of_joining | dept_name   | designation          | emp_name | projects                       | salary
+--------+-----------------+-------------+----------------------+----------+--------------------------------+--------
+    123 |      2020-03-02 | Development |   System Design Lead |    James |                           null |  90000
+    120 |      2020-01-01 | Development | Software Engineering |     John |                  {'QT', 'SQL'} |  80000
+    121 |      2020-04-11 |     Testing |             Debugger |   Potter |             {'PYPY3', 'UI/UX'} |  60000
+    122 |      2020-02-21 |     Testing |               Tester |    Clark | {'DATACENTER', 'Voice Module'} |  75000
+
+(4 rows)
+
+
+cqlsh:employee> SELECT TTL(emp_name) FROM employee_info WHERE emp_id='123' ;
+
+ ttl(emp_name)
+---------------
+
+
+(0 rows)
+cqlsh:employee> SELECT * FROM employee_info ;
+
+ emp_id | date_of_joining | dept_name   | designation          | emp_name | projects                       | salary
+--------+-----------------+-------------+----------------------+----------+--------------------------------+--------
+    120 |      2020-01-01 | Development | Software Engineering |     John |                  {'QT', 'SQL'} |  80000
+    121 |      2020-04-11 |     Testing |             Debugger |   Potter |             {'PYPY3', 'UI/UX'} |  60000
+    122 |      2020-02-21 |     Testing |               Tester |    Clark | {'DATACENTER', 'Voice Module'} |  75000
+
+(3 rows)
