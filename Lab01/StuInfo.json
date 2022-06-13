@@ -1,0 +1,32 @@
+{
+    "A": {
+        "Name": "A",
+        "Semester": "A",
+        "Branch": "A"
+    },
+    "b": {
+        "Name": "b",
+        "Semester": "b",
+        "Branch": "b"
+    },
+    "1BM19CS009": {
+        "Name": "Ajith Kumar G",
+        "Semester": "6",
+        "Branch": "CSE"
+    },
+    "1BM19CS045": {
+        "Name": "Derek Stanley",
+        "Semester": "6",
+        "Branch": "CSE"
+    },
+    "1BM19CS155": {
+        "Name": "SHREASHTHA",
+        "Semester": "6",
+        "Branch": "CSE"
+    },
+    "S": {
+        "Name": "S",
+        "Semester": "4",
+        "Branch": "S"
+    }
+}
