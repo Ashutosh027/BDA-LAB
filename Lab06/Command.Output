@@ -1,0 +1,130 @@
+hdoop@ajay-VirtualBox:~$ ./hadoop-3.3.0/sbin/start-all.sh
+WARNING: Attempting to start all Apache Hadoop daemons as hdoop in 10 seconds.
+WARNING: This is not a recommended production deployment configuration.
+WARNING: Use CTRL-C to abort.
+Starting namenodes on [localhost]
+Starting datanodes
+Starting secondary namenodes [ajay-VirtualBox]
+Starting resourcemanager
+Starting nodemanagers
+hdoop@ajay-VirtualBox:~$ jps
+3441 Jps
+2466 DataNode
+2629 SecondaryNameNode
+3000 NodeManager
+2316 NameNode
+2879 ResourceManager
+hdoop@ajay-VirtualBox:~$ hadoop fs -mkdir /myDir
+hdoop@ajay-VirtualBox:~$ hadoop fs -ls /
+Found 1 items
+drwxr-xr-x   - hdoop supergroup          0 2021-04-17 20:54 /myDir
+hdoop@ajay-VirtualBox:~$ cat >>localfile1
+this is from the local fs 
+hdoop@ajay-VirtualBox:~$ hadoop fs -put ./localfile1 /myDir/filefromlocal
+hdoop@ajay-VirtualBox:~$ hadoop fs -ls /myDir
+Found 1 items
+-rw-r--r--   1 hdoop supergroup         26 2021-04-17 20:59 /myDir/filefromlocal
+hdoop@ajay-VirtualBox:~$ hadoop fs -cat /myDir/filefromlocal
+this is from the local fs
+hdoop@ajay-VirtualBox:~$ cat >>localfile2
+this file was copied from local fs
+hdoop@ajay-VirtualBox:~$ hadoop fs -copyFromLocal ./localfile2 /
+hdoop@ajay-VirtualBox:~$ hadoop fs -ls /
+Found 2 items
+-rw-r--r--   1 hdoop supergroup         35 2021-04-17 21:02 /localfile2
+drwxr-xr-x   - hdoop supergroup          0 2021-04-17 20:59 /myDir
+hdoop@ajay-VirtualBox:~$ hadoop fs -cat /localfile2
+this file was copied from local fs
+hdoop@ajay-VirtualBox:~$ ls
+dfsdata  hadoop-3.3.0  localfile1  localfile2  tmpdata
+hdoop@ajay-VirtualBox:~$ hadoop fs -get /localfile2 ~/gotFromHadoop
+hdoop@ajay-VirtualBox:~$ ls
+dfsdata  gotFromHadoop  hadoop-3.3.0  localfile1  localfile2  tmpdata
+hdoop@ajay-VirtualBox:~$ touch movedFromLocal
+hdoop@ajay-VirtualBox:~$ ls
+dfsdata  gotFromHadoop  hadoop-3.3.0  localfile1  localfile2  movedFromLocal  tmpdata
+hdoop@ajay-VirtualBox:~$ hadoop fs -moveFromLocal ./movedFromLocal /
+hdoop@ajay-VirtualBox:~$ ls
+dfsdata  gotFromHadoop  hadoop-3.3.0  localfile1  localfile2  tmpdata
+hdoop@ajay-VirtualBox:~$ hadoop fs -ls /
+Found 3 items
+-rw-r--r--   1 hdoop supergroup         35 2021-04-17 21:02 /localfile2
+-rw-r--r--   1 hdoop supergroup          0 2021-04-17 21:06 /movedFromLocal
+drwxr-xr-x   - hdoop supergroup          0 2021-04-17 20:59 /myDir
+hdoop@ajay-VirtualBox:~$ hadoop fs -tail localfile2
+tail: `localfile2': No such file or directory
+hdoop@ajay-VirtualBox:~$ hadoop fs -tail /localfile2
+this file was copied from local fs
+hdoop@ajay-VirtualBox:~$ hadoop fs -rm /localfile2
+Deleted /localfile2
+hdoop@ajay-VirtualBox:~$ hadoop fs -ls /
+Found 2 items
+-rw-r--r--   1 hdoop supergroup          0 2021-04-17 21:06 /movedFromLocal
+drwxr-xr-x   - hdoop supergroup          0 2021-04-17 20:59 /myDir
+hdoop@ajay-VirtualBox:~$ hadoop fs -du -s /myDir
+26  26  /myDir
+hdoop@ajay-VirtualBox:~$ hadoop fs -ls /myDir
+Found 1 items
+-rw-r--r--   1 hdoop supergroup         26 2021-04-17 20:59 /myDir/filefromlocal
+hdoop@ajay-VirtualBox:~$ hadoop fs -du -s /myDir/filefromlocal
+26  26  /myDir/filefromlocal
+hdoop@ajay-VirtualBox:~$ hadoop fs -df 
+Filesystem                    Size   Used    Available  Use%
+hdfs://127.0.0.1:9000  20471988224  49152  11658432512    0%
+hdoop@ajay-VirtualBox:~$ hadoop fsck /
+WARNING: Use of this script to execute fsck is deprecated.
+WARNING: Attempting to execute replacement "hdfs fsck" instead.
+
+Connecting to namenode via http://localhost:9870/fsck?ugi=hdoop&path=%2F
+FSCK started by hdoop (auth:SIMPLE) from /127.0.0.1 for path / at Sat Apr 17 21:13:46 IST 2021
+
+
+Status: HEALTHY
+ Number of data-nodes:	1
+ Number of racks:		1
+ Total dirs:			2
+ Total symlinks:		0
+
+Replicated Blocks:
+ Total size:	26 B
+ Total files:	2
+ Total blocks (validated):	1 (avg. block size 26 B)
+ Minimally replicated blocks:	1 (100.0 %)
+ Over-replicated blocks:	0 (0.0 %)
+ Under-replicated blocks:	0 (0.0 %)
+ Mis-replicated blocks:		0 (0.0 %)
+ Default replication factor:	1
+ Average block replication:	1.0
+ Missing blocks:		0
+ Corrupt blocks:		0
+ Missing replicas:		0 (0.0 %)
+ Blocks queued for replication:	0
+
+Erasure Coded Block Groups:
+ Total size:	0 B
+ Total files:	0
+ Total block groups (validated):	0
+ Minimally erasure-coded block groups:	0
+ Over-erasure-coded block groups:	0
+ Under-erasure-coded block groups:	0
+ Unsatisfactory placement block groups:	0
+ Average block group size:	0.0
+ Missing block groups:		0
+ Corrupt block groups:		0
+ Missing internal blocks:	0
+ Blocks queued for replication:	0
+FSCK ended at Sat Apr 17 21:13:46 IST 2021 in 422 milliseconds
+
+
+The filesystem under path '/' is HEALTHY
+hdoop@ajay-VirtualBox:~$ ./hadoop-3.3.0/sbin/stop-all.sh
+WARNING: Stopping all Apache Hadoop daemons as hdoop in 10 seconds.
+WARNING: Use CTRL-C to abort.
+Stopping namenodes on [localhost]
+Stopping datanodes
+Stopping secondary namenodes [ajay-VirtualBox]
+ajay-VirtualBox: WARNING: secondarynamenode did not stop gracefully after 5 seconds: Trying to kill with kill -9
+Stopping nodemanagers
+localhost: WARNING: nodemanager did not stop gracefully after 5 seconds: Trying to kill with kill -9
+Stopping resourcemanager
+hdoop@ajay-VirtualBox:~$
